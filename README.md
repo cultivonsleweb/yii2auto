@@ -16,6 +16,7 @@ run :
 `composer update`
 
 phing is then installed.
+The populated database must be created before running phing.
 Now run phing:
 
 `phing`
