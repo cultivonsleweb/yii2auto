@@ -15,13 +15,21 @@ Edit `phingyii2/build.properties` and customize your data
 
 run :
 
-`composer update`
+```sh
+
+$ composer update
+
+```
 
 phing is then installed.
 The populated database must be created before running phing.
 Now run phing:
 
-`phing`
+```sh 
+
+$ phing
+
+```
 
 ## Add extension
 
@@ -125,4 +133,4 @@ example :
 
 ## LICENSE 
 
-GNU GENERAL PUBLIC LICENSE Version 3, please read LICENSE.md
+GNU GENERAL PUBLIC LICENSE Version 3, please read LICENSE file.
