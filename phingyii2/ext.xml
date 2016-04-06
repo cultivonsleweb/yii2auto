@@ -4,10 +4,6 @@
     <property file="${basedir}/phingyii2/build.properties" />
   
     <target name="run">
-    
-        <phing 
-        phingfile="${ext.path}/dektrium/yii2-user.xml" 
-        target="dektrium/yii2-user" />
         
     </target>
     
