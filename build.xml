@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Yii2Auto" default="build" basedir=".">
+    
+    <property file="phingyii2/build.properties" />
+    
+    <target name="ext">
+        <echo msg="install and update extension start"></echo>
+        <phing phingfile="${basedir}/phingyii2/ext.xml" inheritAll="true" inheritRefs="true" target="run">
+            <property name="basedir" value="${basedir}" />
+        </phing>
+        <echo msg="install and update extension finish"></echo>
+    </target>
+
+    <target name="prepare">
+         <echo msg="Delete directory ./backent, ./common, ./console, ./environments, ./frontend, ./tests, ./tmp" />
+        <delete dir="backend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="common" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="console" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="environments" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="frontend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="tests" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+        <delete>
+            <fileset dir="." casesensitive="false" >
+                <exclude name="build.xml" />
+                <exclude name="phingyii2" />
+                <exclude name="phingyii2/ext.xml" />
+                <exclude name="phingyii2/ext" />
+                <exclude name="phingyii2/ext/*" />
+                <exclude name="phingyii2/ext/**" />
+                <exclude name="phingyii2/ext/*/*" />
+                <exclude name="phingyii2/ext/**/**" />
+                <exclude name="phingyii2/build.properties" />
+                <exclude name="vendor" />
+                <exclude name="composer.json" />
+                <exclude name="composer.lock" />
+            </fileset>
+        </delete>
+        
+        <mkdir dir="./tmp" />
+        <chmod file="${basedir}/tmp" mode="777"/>
+        
+    </target>
+    
+    <autoloader autoloaderpath="vendor/autoload.php"/>
+    
+    <target name="composer" description="Installing dependencies with composer" depends="prepare" >
+        <echo msg="Installing dependencies with composer" />
+        
+        <composer command="global" composer="${composer}">
+            <arg value="require" />
+            <arg value="fxp/composer-asset-plugin:~1.1.1"/>
+        </composer>
+        <echo msg="Composer : global require fxp/composer-asset-plugin:~1.1.1" />
+        
+        <composer command="create-project" composer="${composer}">
+            <arg value="--prefer-dist" />
+            <arg value="yiisoft/yii2-app-advanced" />
+            <arg path="${tmp}" />
+        </composer>
+        <echo msg="Composer : create-project --prefer-dist yiisoft/yii2-app-advanced ${basedir}" />
+        
+       
+        
+        <move file="${tmp}/backend" tofile="${basedir}/backend" overwrite="true"/>
+        <move file="${tmp}/frontend" tofile="${basedir}/frontend" overwrite="true"/>
+        <move file="${tmp}/common" tofile="${basedir}/common" overwrite="true"/>
+        <move file="${tmp}/console" tofile="${basedir}/console" overwrite="true"/>
+        <move file="${tmp}/tests" tofile="${basedir}/tests" overwrite="true"/>
+        <move file="${tmp}/environments" tofile="${basedir}/environments" overwrite="true"/>
+        <move file="${tmp}/vendor" tofile="${basedir}/vendor" overwrite="true"/>
+        <move file="${tmp}/init" tofile="${basedir}/init" overwrite="true"/>
+        <move file="${tmp}/composer.json" tofile="${basedir}/composer.json" overwrite="true"/>
+        <move file="${tmp}/composer.lock" tofile="${basedir}/composer.lock" overwrite="true"/>
+        <move file="${tmp}/init.bat" tofile="${basedir}/init.bat" overwrite="true"/>
+        <move file="${tmp}/yii.bat" tofile="${basedir}/yii.bat" overwrite="true"/>
+        <move file="${tmp}/LICENSE.md" tofile="${basedir}/LICENSE.md" overwrite="true"/>
+        <move file="${tmp}/README.md" tofile="${basedir}/README.md" overwrite="true"/>
+        <move file="${tmp}/requirements.php" tofile="${basedir}/requirements.php" overwrite="true"/>
+        
+         <composer command="require" composer="${composer}">
+            <arg value="phing/phing:2.*@dev"></arg>
+        </composer>
+    </target>
+    
+    <target name="init">
+        <echo>/opt/local/bin/php ${tmp}/init --env=Production --overwrite=n</echo>
+        <exec command="${php} init --env=Production --overwrite=n" dir="${basedir}/" />
+    </target>
+    
+    <target name="db">
+        <mkdir dir="${runtime}" mode="777" />
+        
+        <echo>Copy ${basedir}/common/config/main-local.php to ${runtime}/common/config/main-local.php.dist</echo>
+        
+        <copy file="${basedir}/common/config/main-local.php"
+                tofile="${runtime}/common/config/main-local.php.dist" overwrite="true" />
+        
+        <copy file="${runtime}/common/config/main-local.php.dist" tofile="${basedir}/common/config/main-local.php" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="mysql:host=" endtoken=";dbname">
+                    <token key="localhost" value="mysql:host=${db.host};dbname"/>
+                </replacetokens>
+                <replacetokens begintoken="dbname=" endtoken="',">
+                    <token key="yii2advanced" value="dbname=${db.database}',"/>
+                </replacetokens>
+                <replacetokens begintoken="'username' => '" endtoken="',">
+                    <token key="root" value="'username' => '${db.user}'," />
+                </replacetokens>
+                <replaceregexp>
+                    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
+                </replaceregexp>
+            </filterchain>
+        </copy>
+        
+        <echo>Replace content db in ${build}/common/config/main-local.php</echo>
+        
+    </target>
+    
+    <autoloader autoloaderpath="vendor/autoload.php"/>
+    
+    <target name="composer-update">
+        
+        <echo>composer update</echo>
+        <composer command="update" composer="${composer}" />
+        
+    </target>
+    
+ 
+    
+    <target name="clean">
+        <delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+    </target>
+    
+    <target name="build" depends="prepare, composer, init, db, composer-update, ext, clean">
+        <echo>prepare, composer, init, db, composer-update, migration, ext, clean</echo>
+        <echo>prepare...........finish</echo>
+        <echo>composer..........finish</echo>
+        <echo>init..............finish</echo>
+        <echo>db................finish</echo>
+        <echo>composer update...finish</echo>
+        <echo>migration.........finish</echo>
+        <echo>clean.............finish</echo>
+    </target>
+    
+</project>
