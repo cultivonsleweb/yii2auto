@@ -122,3 +122,7 @@ example :
     
 </project>
 ```
+
+## LICENSE 
+
+GNU GENERAL PUBLIC LICENSE Version 3, please read LICENSE.md
