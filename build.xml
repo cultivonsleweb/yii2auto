@@ -12,14 +12,32 @@
     </target>
 
     <target name="prepare">
-         <echo msg="Delete directory ./backent, ./common, ./console, ./environments, ./frontend, ./tests, ./tmp" />
-        <delete dir="backend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
-        <delete dir="common" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	    	<if>
+			<equals arg1="basic" arg2="${yii2.template}" />
+			<then>
+				<property name="runtime" value="${basedir}/runtime" />
+			</then>
+			<else>
+				<property name="runtime" value="${basedir}/console/runtime" />
+
+			</else>
+		</if>
+	    <echo msg="Delete directory ./backent, ./common, ./console, ./environments, ./frontend, ./tests, ./tmp" />
+	    <delete dir="assets" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	    <delete dir="backend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	    <delete dir="commands" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	    <delete dir="common" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	    <delete dir="controllers" includeemptydirs="true" failonerror="false" verbose="true"></delete>
         <delete dir="console" includeemptydirs="true" failonerror="false" verbose="true"></delete>
-        <delete dir="environments" includeemptydirs="true" failonerror="false" verbose="true"></delete>
-        <delete dir="frontend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="config" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="environments" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="frontend" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="mail" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="models" includeemptydirs="true" failonerror="false" verbose="true"></delete>
         <delete dir="tests" includeemptydirs="true" failonerror="false" verbose="true"></delete>
-        <delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="views" includeemptydirs="true" failonerror="false" verbose="true"></delete>
+	<delete dir="web" includeemptydirs="true" failonerror="false" verbose="true"></delete>
         <delete>
             <fileset dir="." casesensitive="false" >
                 <exclude name="build.xml" />
@@ -42,7 +60,7 @@
         
     </target>
     
-    <autoloader autoloaderpath="vendor/autoload.php"/>
+    <!--autoloader autoloaderpath="vendor/autoload.php"/-->
     
     <target name="composer" description="Installing dependencies with composer" depends="prepare" >
         <echo msg="Installing dependencies with composer" />
@@ -55,29 +73,52 @@
         
         <composer command="create-project" composer="${composer}">
             <arg value="--prefer-dist" />
-            <arg value="yiisoft/yii2-app-advanced" />
+	    <arg value="yiisoft/yii2-app-${yii2.template}" />
             <arg path="${tmp}" />
         </composer>
-        <echo msg="Composer : create-project --prefer-dist yiisoft/yii2-app-advanced ${basedir}" />
+	<echo msg="Composer : create-project --prefer-dist yiisoft/yii2-app-${yii2.template} ${basedir}" />
         
        
-        
-        <move file="${tmp}/backend" tofile="${basedir}/backend" overwrite="true"/>
-        <move file="${tmp}/frontend" tofile="${basedir}/frontend" overwrite="true"/>
-        <move file="${tmp}/common" tofile="${basedir}/common" overwrite="true"/>
-        <move file="${tmp}/console" tofile="${basedir}/console" overwrite="true"/>
-        <move file="${tmp}/tests" tofile="${basedir}/tests" overwrite="true"/>
-        <move file="${tmp}/environments" tofile="${basedir}/environments" overwrite="true"/>
-        <move file="${tmp}/vendor" tofile="${basedir}/vendor" overwrite="true"/>
-        <move file="${tmp}/init" tofile="${basedir}/init" overwrite="true"/>
-        <move file="${tmp}/composer.json" tofile="${basedir}/composer.json" overwrite="true"/>
-        <move file="${tmp}/composer.lock" tofile="${basedir}/composer.lock" overwrite="true"/>
-        <move file="${tmp}/init.bat" tofile="${basedir}/init.bat" overwrite="true"/>
-        <move file="${tmp}/yii.bat" tofile="${basedir}/yii.bat" overwrite="true"/>
-        <move file="${tmp}/LICENSE.md" tofile="${basedir}/LICENSE.md" overwrite="true"/>
-        <move file="${tmp}/README.md" tofile="${basedir}/README.md" overwrite="true"/>
-        <move file="${tmp}/requirements.php" tofile="${basedir}/requirements.php" overwrite="true"/>
-        
+       	<if>
+		<equals arg1="basic" arg2="${yii2.template}" />
+		<then>
+			<move file="${tmp}/LICENSE.md" tofile="${basedir}/LICENSE.md" overwrite="true"/>
+			<move file="${tmp}/README.md" tofile="${basedir}/README.md" overwrite="true"/>
+			<move file="${tmp}/assets" tofile="${basedir}/assets" overwrite="true"/>
+			<move file="${tmp}/commands" tofile="${basedir}/commands" overwrite="true"/>
+			<move file="${tmp}/composer.json" tofile="${basedir}/composer.json" overwrite="true"/>
+			<move file="${tmp}/config" tofile="${basedir}/config" overwrite="true"/>
+			<move file="${tmp}/controllers" tofile="${basedir}/controllers" overwrite="true"/>
+			<move file="${tmp}/mail" tofile="${basedir}/mail" overwrite="true"/>
+			<move file="${tmp}/models" tofile="${basedir}/models" overwrite="true"/>
+			<move file="${tmp}/requirements.php" tofile="${basedir}/requirements.php" overwrite="true"/>
+			<move file="${tmp}/runtime" tofile="${basedir}/runtime" overwrite="true"/>
+			<move file="${tmp}/tests" tofile="${basedir}/tests" overwrite="true"/>
+			<move file="${tmp}/views" tofile="${basedir}/views" overwrite="true"/>
+			<move file="${tmp}/web" tofile="${basedir}/web" overwrite="true"/>
+			<move file="${tmp}/yii" tofile="${basedir}/yii" overwrite="true"/>
+			<move file="${tmp}/yii.bat" tofile="${basedir}/yii.bat" overwrite="true"/>
+
+		</then>
+	<else>
+        	<move file="${tmp}/backend" tofile="${basedir}/backend" overwrite="true"/>
+        	<move file="${tmp}/frontend" tofile="${basedir}/frontend" overwrite="true"/>
+        	<move file="${tmp}/common" tofile="${basedir}/common" overwrite="true"/>
+        	<move file="${tmp}/console" tofile="${basedir}/console" overwrite="true"/>
+        	<move file="${tmp}/tests" tofile="${basedir}/tests" overwrite="true"/>
+        	<move file="${tmp}/environments" tofile="${basedir}/environments" overwrite="true"/>
+        	<move file="${tmp}/vendor" tofile="${basedir}/vendor" overwrite="true"/>
+        	<move file="${tmp}/init" tofile="${basedir}/init" overwrite="true"/>
+        	<move file="${tmp}/composer.json" tofile="${basedir}/composer.json" overwrite="true"/>
+        	<move file="${tmp}/composer.lock" tofile="${basedir}/composer.lock" overwrite="true"/>
+        	<move file="${tmp}/init.bat" tofile="${basedir}/init.bat" overwrite="true"/>
+        	<move file="${tmp}/yii.bat" tofile="${basedir}/yii.bat" overwrite="true"/>
+        	<move file="${tmp}/LICENSE.md" tofile="${basedir}/LICENSE.md" overwrite="true"/>
+        	<move file="${tmp}/README.md" tofile="${basedir}/README.md" overwrite="true"/>
+		<move file="${tmp}/requirements.php" tofile="${basedir}/requirements.php" overwrite="true"/>
+	</else>
+	</if>
+
          <composer command="require" composer="${composer}">
             <arg value="phing/phing:2.*@dev"></arg>
         </composer>
@@ -89,35 +130,73 @@
     </target>
     
     <target name="db">
-        <mkdir dir="${runtime}" mode="777" />
+	    <chmod file="${runtime}" mode="777" />
+	    	    
+
+	<if>
+		<equals arg1="basic" arg2="${yii2.template}" />
+		<then>
+			<echo>template: basic</echo>
+			<chmod file="${basedir}/assets" mode="777" />
+			<chmod file="${basedir}/web" mode="777" />
+			<chmod file="${basedir}/web/assets" mode="777" />
+
+			<echo>Copy ${basedir}/config/db.php to ${runtime}/config/db.php.dist</echo>
+			<copy file="${basedir}/config/db.php"
+				tofile="${runtime}/config/db.php.dist" overwrite="true" />
+
+			<copy file="${runtime}/config/db.php.dist" tofile="${basedir}/config/db.php" overwrite="true">
+            			<filterchain>
+                			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
+                			    <token key="localhost" value="mysql:host=${db.host};dbname"/>
+                			</replacetokens>
+                			<replacetokens begintoken="dbname=" endtoken="',">
+                			    <token key="yii2basic" value="dbname=${db.database}',"/>
+                			</replacetokens>
+                			<replacetokens begintoken="'username' => '" endtoken="',">
+                			    <token key="root" value="'username' => '${db.user}'," />
+                			</replacetokens>
+                			<replaceregexp>
+                			    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
+                			</replaceregexp>
+            			</filterchain>
+        		</copy>
+			<echo>Replace content db in ${build}/config/db.php</echo>
+		</then>
+		<else>
+			<echo>template: advanced</echo>
+			<echo>Copy ${basedir}/common/config/main-local.php to ${runtime}/common/config/main-local.php.dist</echo>
         
-        <echo>Copy ${basedir}/common/config/main-local.php to ${runtime}/common/config/main-local.php.dist</echo>
+        		<copy file="${basedir}/common/config/main-local.php"
+                	tofile="${runtime}/common/config/main-local.php.dist" overwrite="true" />
         
-        <copy file="${basedir}/common/config/main-local.php"
-                tofile="${runtime}/common/config/main-local.php.dist" overwrite="true" />
+        		<copy file="${runtime}/common/config/main-local.php.dist" tofile="${basedir}/common/config/main-local.php" overwrite="true">
+            			<filterchain>
+                			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
+                			    <token key="localhost" value="mysql:host=${db.host};dbname"/>
+                			</replacetokens>
+                			<replacetokens begintoken="dbname=" endtoken="',">
+                			    <token key="yii2advanced" value="dbname=${db.database}',"/>
+                			</replacetokens>
+                			<replacetokens begintoken="'username' => '" endtoken="',">
+                			    <token key="root" value="'username' => '${db.user}'," />
+                			</replacetokens>
+                			<replaceregexp>
+                			    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
+                			</replaceregexp>
+            			</filterchain>
+        		</copy>
         
-        <copy file="${runtime}/common/config/main-local.php.dist" tofile="${basedir}/common/config/main-local.php" overwrite="true">
-            <filterchain>
-                <replacetokens begintoken="mysql:host=" endtoken=";dbname">
-                    <token key="localhost" value="mysql:host=${db.host};dbname"/>
-                </replacetokens>
-                <replacetokens begintoken="dbname=" endtoken="',">
-                    <token key="yii2advanced" value="dbname=${db.database}',"/>
-                </replacetokens>
-                <replacetokens begintoken="'username' => '" endtoken="',">
-                    <token key="root" value="'username' => '${db.user}'," />
-                </replacetokens>
-                <replaceregexp>
-                    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
-                </replaceregexp>
-            </filterchain>
-        </copy>
-        
-        <echo>Replace content db in ${build}/common/config/main-local.php</echo>
-        
+			<echo>Replace content db in ${build}/common/config/main-local.php</echo>
+		</else>
+	</if>
     </target>
-    
-    <autoloader autoloaderpath="vendor/autoload.php"/>
+
+    <target name="migration">
+	    <exec command="${php} yii migrate --interactive=0" dir="${basedir}/" />
+    </target>
+
+    <!--autoloader autoloaderpath="vendor/autoload.php"/-->
     
     <target name="composer-update">
         
@@ -132,7 +211,7 @@
         <delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
     </target>
     
-    <target name="build" depends="prepare, composer, init, db, composer-update, ext, clean">
+    <target name="build" depends="prepare, composer, init, db, composer-update, migration, ext, clean">
         <echo>prepare, composer, init, db, composer-update, migration, ext, clean</echo>
         <echo>prepare...........finish</echo>
         <echo>composer..........finish</echo>
