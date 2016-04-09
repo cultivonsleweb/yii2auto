@@ -9,11 +9,11 @@ Composer (https://getcomposer.org/) must be installed.
 
 ## install
 
-Clone project.
+1. Clone project.
 
-Edit `phingyii2/build.properties` and customize your data
+2. Edit `phingyii2/build.properties` and customize your data
 
-run :
+3. run :
 
 ```sh
 
@@ -23,12 +23,110 @@ $ composer update
 
 phing is then installed.
 The populated database must be created before running phing.
-Now run phing:
+4. Now run phing:
 
 ```sh 
 
 $ phing
 
+```
+
+## build.properties
+
+File default :
+
+```
+# PROJECT PROPERTIES
+
+# WARNING : DON'T CHANGE basedir
+basedir= . 
+
+# Project name
+project=Yii2Auto
+
+# Action : install or update
+#	   After installation, set to 'install' automatically becomes 'update'
+action=install
+
+# general paths
+build=${basedir}/build
+tmp=${basedir}/tmp
+vendor=vendor
+yii=${basedir}/yii
+php=/opt/local/bin/php
+composer=/opt/local/bin/composer
+ext.path=${basedir}/phingyii2/ext
+
+# Set the template project structure: 'basic' or 'advanced'
+yii2.template=advanced
+
+# 1/ basic
+# Define the data template for the 'basic'.
+yii2.basic.db.host=localhost
+yii2.basic.db.user=root
+yii2.basic.db.pwd=root
+yii2.basic.db.database=yii2auto_basic
+
+# 2/ advanced
+# common database, set to 'true'. Otherwise 'false'
+yii2.advanced.db.common=true
+
+# if common is 'true', define the variables 'yii2.advanced.db.common. *'.
+yii2.advanced.db.common.host=localhost
+yii2.advanced.db.common.user=root
+yii2.advanced.db.common.pwd=root
+yii2.advanced.db.common.database=yii2auto_advanced_common
+
+# if common is false, define the variables 'yii2.advanced.db.backend. *' and 'yii2.advanced.db.frontend. *'.
+yii2.advanced.db.backend.host=localhost
+yii2.advanced.db.backend.user=root
+yii2.advanced.db.backend.pwd=root
+yii2.advanced.db.backend.database=yii2auto_advanced_backend
+
+yii2.advanced.db.frontend.host=localhost
+yii2.advanced.db.frontend.user=root
+yii2.advanced.db.frontend.pwd=root
+yii2.advanced.db.frontend.database=yii2auto_advanced_frontend
+```
+
+Change `project` by your project name
+
+Change `general paths` for `composer` and `php` by yours paths.
+
+Choose between 'basic' and 'advanced' to `yii2.template`
+
+If you choose `basic`, changes the values of the following lines:
+
+```
+yii2.basic.db.host=localhost
+yii2.basic.db.user=root
+yii2.basic.db.pwd=root
+yii2.basic.db.database=yii2auto_basic
+```
+
+If you choose `advanced`, you must set if you use the same database for the frontend and the backend. If so, then the variable définissiez `yii2.advanced.db.common` `true`, if not `false`.
+
+If `yii2.advanced.db.commontrue` = `true`, define: 
+
+```
+yii2.advanced.db.common.host=localhost
+yii2.advanced.db.common.user=root
+yii2.advanced.db.common.pwd=root
+yii2.advanced.db.common.database=yii2auto_advanced_common
+```
+
+if not, define:
+
+```
+yii2.advanced.db.backend.host=localhost
+yii2.advanced.db.backend.user=root
+yii2.advanced.db.backend.pwd=root
+yii2.advanced.db.backend.database=yii2auto_advanced_backend
+
+yii2.advanced.db.frontend.host=localhost
+yii2.advanced.db.frontend.user=root
+yii2.advanced.db.frontend.pwd=root
+yii2.advanced.db.frontend.database=yii2auto_advanced_frontend
 ```
 
 ## Add extension
