@@ -148,16 +148,16 @@
 			<copy file="${runtime}/config/db.php.dist" tofile="${basedir}/config/db.php" overwrite="true">
             			<filterchain>
                 			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
-                			    <token key="localhost" value="mysql:host=${db.host};dbname"/>
+                			    <token key="localhost" value="mysql:host=${yii2.basic.db.host};dbname"/>
                 			</replacetokens>
                 			<replacetokens begintoken="dbname=" endtoken="',">
-                			    <token key="yii2basic" value="dbname=${db.database}',"/>
+                			    <token key="yii2basic" value="dbname=${yii2.basic.db.database}',"/>
                 			</replacetokens>
                 			<replacetokens begintoken="'username' => '" endtoken="',">
-                			    <token key="root" value="'username' => '${db.user}'," />
+                			    <token key="root" value="'username' => '${yii2.basic.db.user}'," />
                 			</replacetokens>
                 			<replaceregexp>
-                			    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
+                			    <regexp pattern="'password' => ''," replace="'password' => '${yii2.basic.db.pwd}'," />
                 			</replaceregexp>
             			</filterchain>
         		</copy>
@@ -165,7 +165,27 @@
 		</then>
 		<else>
 			<echo>template: advanced</echo>
-			<echo>Copy ${basedir}/common/config/main-local.php to ${runtime}/common/config/main-local.php.dist</echo>
+			<phingcall target="advanced"></phingcall>
+		</else>
+	</if>
+	</target>
+
+	<target name="advanced">
+		<if>
+			<equals arg1="true" arg2="${yii2.advanced.db.common}" />
+			<then>
+				<phingcall target="advanced_common"></phingcall>
+			</then>
+			<else>
+				<phingcall target="advanced_backend"></phingcall>
+				<phingcall target="advanced_fronted"></phingcall>
+			</else>
+
+		</if>
+	</target>
+
+	<target name="advanced_common">
+		<echo>Copy ${basedir}/common/config/main-local.php to ${runtime}/common/config/main-local.php.dist</echo>
         
         		<copy file="${basedir}/common/config/main-local.php"
                 	tofile="${runtime}/common/config/main-local.php.dist" overwrite="true" />
@@ -173,24 +193,76 @@
         		<copy file="${runtime}/common/config/main-local.php.dist" tofile="${basedir}/common/config/main-local.php" overwrite="true">
             			<filterchain>
                 			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
-                			    <token key="localhost" value="mysql:host=${db.host};dbname"/>
+                			    <token key="localhost" value="mysql:host=${yii2.advanced.db.common.host};dbname"/>
                 			</replacetokens>
                 			<replacetokens begintoken="dbname=" endtoken="',">
-                			    <token key="yii2advanced" value="dbname=${db.database}',"/>
+                			    <token key="yii2advanced" value="dbname=${yii2.advanced.db.common.database}',"/>
                 			</replacetokens>
                 			<replacetokens begintoken="'username' => '" endtoken="',">
-                			    <token key="root" value="'username' => '${db.user}'," />
+                			    <token key="root" value="'username' => '${yii2.advanced.db.common.user}'," />
                 			</replacetokens>
                 			<replaceregexp>
-                			    <regexp pattern="'password' => ''," replace="'password' => '${db.pwd}'," />
+                			    <regexp pattern="'password' => ''," replace="'password' => '${yii2.advanced.db.common.pwd}'," />
                 			</replaceregexp>
             			</filterchain>
         		</copy>
         
 			<echo>Replace content db in ${build}/common/config/main-local.php</echo>
-		</else>
-	</if>
-    </target>
+
+		</target>
+
+		<target name="advanced_backend">
+			<echo>Copy ${basedir}/backend/config/main-local.php to ${runtime}/backend/config/main-local.php.dist</echo>
+
+			<copy file="${basedir}/backend/config/main-local.php"
+                	tofile="${runtime}/backend/config/main-local.php.dist" overwrite="true" />
+        
+        		<copy file="${runtime}/backend/config/main-local.php.dist" tofile="${basedir}/backend/config/main-local.php" overwrite="true">
+            			<filterchain>
+                			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
+                			    <token key="localhost" value="mysql:host=${yii2.advanced.db.backend.host};dbname"/>
+                			</replacetokens>
+                			<replacetokens begintoken="dbname=" endtoken="',">
+                			    <token key="yii2advanced" value="dbname=${yii2.advanced.db.backend.database}',"/>
+                			</replacetokens>
+                			<replacetokens begintoken="'username' => '" endtoken="',">
+                			    <token key="root" value="'username' => '${yii2.advanced.db.backend.user}'," />
+                			</replacetokens>
+                			<replaceregexp>
+                			    <regexp pattern="'password' => ''," replace="'password' => '${yii2.advanced.db.backend.pwd}'," />
+                			</replaceregexp>
+            			</filterchain>
+        		</copy>
+        
+			<echo>Replace content db in ${build}/backend/config/main-local.php</echo>
+		</target>
+
+		<target name="advanced_fronted">
+			<echo>Copy ${basedir}/frontend/config/main-local.php to ${runtime}/frontend/config/main-local.php.dist</echo>
+			<copy file="${basedir}/frontend/config/main-local.php"
+                	tofile="${runtime}/frontend/config/main-local.php.dist" overwrite="true" />
+        
+        		<copy file="${runtime}/frontend/config/main-local.php.dist" tofile="${basedir}/frontend/config/main-local.php" overwrite="true">
+            			<filterchain>
+                			<replacetokens begintoken="mysql:host=" endtoken=";dbname">
+                			    <token key="localhost" value="mysql:host=${yii2.advanced.db.frontend.host};dbname"/>
+                			</replacetokens>
+                			<replacetokens begintoken="dbname=" endtoken="',">
+                			    <token key="yii2advanced" value="dbname=${yii2.advanced.db.frontend.database}',"/>
+                			</replacetokens>
+                			<replacetokens begintoken="'username' => '" endtoken="',">
+                			    <token key="root" value="'username' => '${yii2.advanced.db.frontend.user}'," />
+                			</replacetokens>
+                			<replaceregexp>
+                			    <regexp pattern="'password' => ''," replace="'password' => '${yii2.advanced.db.frontend.pwd}'," />
+                			</replaceregexp>
+            			</filterchain>
+        		</copy>
+        
+			<echo>Replace content db in ${build}/frontend/config/main-local.php</echo>
+		</target>
+
+
 
     <target name="migration">
 	    <exec command="${php} yii migrate --interactive=0" dir="${basedir}/" />
