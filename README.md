@@ -220,9 +220,16 @@ example :
   
     <target name="run">
     
+        <echo>extensions, install,update..start</echo>
+        
         <phing 
         phingfile="${ext.path}/dektrium/yii2-user.xml" 
         target="dektrium/yii2-user" />
+        
+        <echo>extensions, install,update..end</echo>
+        
+        <echo>composer update</echo>
+        <composer command="update" composer="${composer}" />
         
     </target>
     
