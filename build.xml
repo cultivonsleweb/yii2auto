@@ -280,7 +280,7 @@
     	<if>
 			<equals arg1="true" arg2="${yii2.advanced.db.common}" />
 			<then>
-				 <exec command="${php} yii migrate --db=${yii2.advanced.db.common.database}' --interactive=0" dir="${basedir}/" />
+				 <exec command="${php} yii migrate --interactive=0" dir="${basedir}/" />
 			</then>
 			<else>
 				<exec command="${php} yii migrate --db=${yii2.advanced.db.backend.database}' --interactive=0" dir="${basedir}/" />
@@ -306,7 +306,7 @@
         <copy file="${runtime}/phingyii2/build.properties.dist" tofile="${basedir}/phingyii2/build.properties" overwrite="true" />
         <filterchain>
         	<replaceregexp>
-        		<regexp pattern="action=install" replace="action=update" />
+        		<regexp pattern="action=install" replace="action=update" ignoreCase="true" />
         	</replaceregexp>
         </filterchain>
         <delete dir="tmp" includeemptydirs="true" failonerror="false" verbose="true"></delete>
