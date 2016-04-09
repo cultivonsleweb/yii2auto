@@ -125,8 +125,8 @@
     </target>
     
     <target name="init">
-        <echo>/opt/local/bin/php ${tmp}/init --env=Production --overwrite=n</echo>
-        <exec command="${php} init --env=Production --overwrite=n" dir="${basedir}/" />
+        <echo>/opt/local/bin/php ${tmp}/init --env=${yii2.env} --overwrite=n</echo>
+        <exec command="${php} init --env=${yii2.env} --overwrite=n" dir="${basedir}/" />
     </target>
     
     <target name="db">
