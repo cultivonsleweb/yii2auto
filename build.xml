@@ -268,7 +268,7 @@
 		<if>
 			<equals arg1="basic" arg2="${yii2.template}" />
 			<then>
-				<exec command="${php} yii migrate --db=${yii2.basic.db.database} --interactive=0" dir="${basedir}/" />
+				<echo>not migration for basic template</echo>
 			</then>
 		<else>
 			<phingcall target="advanced_migration"></phingcall>
