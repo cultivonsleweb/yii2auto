@@ -303,7 +303,7 @@
     
     <target name="clean">
     	<copy file="${basedir}/phingyii2/build.properties" tofile="${runtime}/phingyii2/build.properties.dist" overwrite="true" />
-        <copy file="${runtime}/phingyii2/build.properties.dist" tofile="${basedir}/phingyii2/build.properties" overwrite="true">
+        <copy file="${runtime}/phingyii2/build.properties.dist" tofile="${basedir}/phingyii2/build.properties" overwrite="true" />
         <filterchain>
         	<replaceregexp>
         		<regexp pattern="action=install" replace="action=update" />
