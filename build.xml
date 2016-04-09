@@ -265,7 +265,29 @@
 
 
     <target name="migration">
-	    <exec command="${php} yii migrate --interactive=0" dir="${basedir}/" />
+		<if>
+			<equals arg1="basic" arg2="${yii2.template}" />
+			<then>
+				<exec command="${php} yii migrate --db=${yii2.basic.db.database} --interactive=0" dir="${basedir}/" />
+			</then>
+		<else>
+			<phingcall target="advanced_migration"></phingcall>
+		</else>
+		</if>
+	       </target>
+
+    <target name="advanced_migration">
+    	<if>
+			<equals arg1="true" arg2="${yii2.advanced.db.common}" />
+			<then>
+				 <exec command="${php} yii migrate --db=${yii2.advanced.db.common.database}' --interactive=0" dir="${basedir}/" />
+			</then>
+			<else>
+				<exec command="${php} yii migrate --db=${yii2.advanced.db.backend.database}' --interactive=0" dir="${basedir}/" />
+				<exec command="${php} yii migrate --db=${yii2.advanced.db.frontend.database}' --interactive=0" dir="${basedir}/" />
+			</else>
+
+		</if>
     </target>
 
     <!--autoloader autoloaderpath="vendor/autoload.php"/-->
