@@ -31,6 +31,14 @@ $ phing
 
 ```
 
+or 
+
+````
+
+$ vendor/bin/phing
+
+```
+
 ## build.properties
 
 File default :
